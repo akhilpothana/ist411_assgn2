@@ -1,98 +1,79 @@
-package unsynch;
- 
-    import java.util.*;
- 
-    /**
-     * A bank with a number of bank accounts.
-     * @version 1.30 2004-08-01
-     * @author Cay Horstmann
-    */
-   public class Bank
-   {
-      private final double[] accounts;
 
-      /**
-       * Constructs the bank.
-       * @param n the number of accounts
-       * @param initialBalance the initial balance for each account
-       */
-      public Bank(int n, double initialBalance)
-      {
-         accounts = new double[n];
-         Arrays.fill(accounts, initialBalance);
-      }
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-     /**
-26       * Transfers money from one account to another.
-27       * @param from the account to transfer from
-28       * @param to the account to transfer to
-29       * @param amount the amount to transfer
-30       */
-      public void transfer(int from, int to, double amount)
-      {
-         if (accounts[from] < amount) return;
-         System.out.print(Thread.currentThread());
-         accounts[from] -= amount;
-         System.out.printf(" %10.2f from %d to %d", amount, from, to);
-         accounts[to] += amount;
-         System.out.printf(" Total Balance: %10.2f%n", getTotalBalance());
-      }
+public class App extends Thread {
 
-      /**
-42       * Gets the sum of all account balances.
-43       * @return the total balance
-44       */
-      public double getTotalBalance()      {
-        double sum = 0;
+    Transactions tr1 = new Transactions();
+    //Transactions tr2 = new Transactions();
 
-         for (double a : accounts)
-            sum += a;
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
 
-         return sum;
-      }
+            try {
+                while (true) {
 
-      /**
-       * Gets the number of accounts in the bank.7       * @return the number of accounts
-       */
-      public int size()
-      {
-         return accounts.length;
-      }
-   }
----------------------------------------------------------------------------------------------------
-package unsynch;
+                    if (tr1.trans1() >= 0) {
+                        System.out.println("for transaction 1: " + tr1.trans1());
+                    } else {
 
-/**
- * This program shows data corruption when multiple threads access a data
- * structure.
- *
- * @version 1.31 2015-06-21
- * @author Cay Horstmann
- */
-public class UnsynchBankTest {
-
-    public static final int NACCOUNTS = 100;
-    public static final double INITIAL_BALANCE = 1000;
-    public static final double MAX_AMOUNT = 1000;
-    public static final int DELAY = 10;
-
-    public static void main(String[] args) {
-        Bank bank = new Bank(NACCOUNTS, INITIAL_BALANCE);
-        for (int i = 0; i < NACCOUNTS; i++) {
-            int fromAccount = i;
-            Runnable r = () -> {
-                try {
-                    while (true) {
-                        int toAccount = (int) (bank.size() * Math.random());
-                        double amount = MAX_AMOUNT * Math.random();
-                        bank.transfer(fromAccount, toAccount, amount);
-                        Thread.sleep((int) (DELAY * Math.random()));
+                        tr1.wait();
                     }
-                } catch (InterruptedException e) {
                 }
-            };
-            Thread t = new Thread(r);
-            t.start();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+
+        Transactions tr2 = new Transactions();
+        App myApp = new App();
+        myApp.start();
+        for (int i = 0; i < 100; i++) {
+            try {
+                while (true) {
+
+                    if (tr2.trans2() >= 0) {
+                        System.out.println("for transaction 2: " + tr2.trans2());
+                    } else {
+                        tr2.wait();
+                    }
+                }
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+}
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+public class Transactions {
+
+    //Accounts with defaulted balances
+    private int account1;
+    private int account2;
+
+    //This method computes the first transfer from account 1 to account 2
+    public int trans1() {
+        account1 = account1 - 300;
+        account2 = account2 + 300;
+
+        return account1; //-100
+    }
+    
+    
+    //This method computes the second transfer from account 2 to account 1
+    public int trans2() {
+        account2 = account2 - 400;
+        account1 = account1 + 400;
+
+        return account2;//-100
     }
 }
