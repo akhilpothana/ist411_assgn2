@@ -11,18 +11,19 @@ public class App extends Thread {
     public void run() {
         for (int i = 0; i < 100; i++) {
 
-            try {
+            synchronized (tr1) {
                 while (true) {
 
                     if (tr1.trans1() >= 0) {
                         System.out.println("for transaction 1: " + tr1.trans1());
                     } else {
 
-                        tr1.wait();
+                        try {
+                            tr1.wait();
+                        } catch (InterruptedException ex) {
+                        }
                     }
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -34,25 +35,26 @@ public class App extends Thread {
         App myApp = new App();
         myApp.start();
         for (int i = 0; i < 100; i++) {
-            try {
+
+            synchronized (tr2) {
                 while (true) {
 
                     if (tr2.trans2() >= 0) {
                         System.out.println("for transaction 2: " + tr2.trans2());
                     } else {
-                        tr2.wait();
+                        try {
+                            tr2.wait();
+                        } catch (InterruptedException ex) {
+                        }
                     }
                 }
 
-            } catch (InterruptedException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
     }
 }
----------------------------------------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------
 
 public class Transactions {
 
