@@ -1,0 +1,221 @@
+
+
+//--------------------------------------------Main Class---------------------------------
+public class App {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+        MyJFrame mjf = new MyJFrame();
+    }
+    
+}
+//----------------------------------------------MyFrame Class----------------------------
+
+import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class MyJFrame extends JFrame {
+
+    final int FRAME_WIDTH = 1800;
+    final int FRAME_HEIGHT = 1000;
+
+    public MyJFrame() {
+        super("The News Hub");
+
+        MyJPanel mjp = new MyJPanel();
+        mjp.setBackground(Color.GRAY);
+
+        getContentPane().add(mjp, "Center");
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setVisible(true);
+//		
+    }
+
+}
+//------------------------------------------------MyPanel Class-----------------------------
+
+import java.awt.*;
+import javax.swing.*;
+
+public class MyJPanel extends JPanel {
+
+    public MyJPanel() {
+
+        BorderLayout border = new BorderLayout();
+        setLayout(border);
+        setBackground(Color.white);
+        
+        
+        InfPanel inf = new InfPanel();
+
+        SideBar1 sb = new SideBar1();
+
+        NewsDeck nd = new NewsDeck();
+
+        NewsOutlets no = new NewsOutlets();
+        add(inf, "North");
+        add(nd, "Center");
+        add(sb, "East");
+        add(no, "South");
+    }
+}
+//--------------------------------------------InfPanel Class-------------------------------
+import java.awt.*;
+import javax.swing.*;
+public class InfPanel extends JPanel
+{
+    private JLabel scrlTxt;
+    private String in;
+    public InfPanel ()
+    {
+        super ();
+        setLayout(new GridLayout());
+        setBackground(Color.red);
+        addScrollText();
+        
+    }
+     
+    
+    public InfPanel(String info){
+        in = info;
+        
+    }
+    
+    public void addScrollText(){
+        
+        scrlTxt = new JLabel("Headlines: ");
+        scrlTxt.setFont(new Font("Serif", Font.BOLD, 38));
+        scrlTxt.setForeground(Color.white);
+        add(scrlTxt);
+        
+        
+    }
+    
+    
+}
+ //----------------------------------------------NewsDeck Class---------------------------
+ 
+import java.awt.*;
+import javax.swing.*;
+
+public class NewsDeck extends JPanel {
+
+    private String in;
+    private JLabel news;
+
+    public NewsDeck() {
+        super();
+        setBackground(Color.white);
+        setLayout(new GridLayout());
+        getNews();
+
+    }
+
+    public NewsDeck(String info) {
+        in = info;
+
+    }
+
+    NewsDeck(InfPanel inf) {
+    }
+
+    private void getNews() {
+        news = new JLabel("Coming soon...");
+        news.setFont(new Font("Serif", Font.BOLD, 20));
+        add(news, "Center");
+
+    }
+}
+//------------------------------------------------NewsOutlets Class------------------------------------
+
+import java.awt.*;
+import javax.swing.*;
+
+public class NewsOutlets extends JPanel {
+
+    private String in;
+    private JButton cnn;
+    private JButton cbs;
+    private JButton bbc;
+    private JButton fox;
+
+    public NewsOutlets() {
+        super();
+        setBackground(Color.yellow);
+        setLayout(new GridLayout());
+        CreateButtons();
+    }
+
+    public NewsOutlets(String info) {
+        in = info;
+
+    }
+
+    public NewsOutlets(NewsDeck deck) {
+    }
+
+    public void CreateButtons() {
+        cnn = new JButton("CNN");
+        cnn.setFont(new Font("Serif", Font.BOLD, 38));
+        add(cnn);
+        cbs = new JButton("CBS NEWS");
+        cbs.setFont(new Font("Serif", Font.BOLD, 38));
+        add(cbs);
+        bbc = new JButton("BBC");
+        bbc.setFont(new Font("Serif", Font.BOLD, 38));
+        add(bbc);
+        fox = new JButton("FOX NEWS");
+        fox.setFont(new Font("Serif", Font.BOLD, 38));
+        add(fox);
+
+    }
+}
+//-----------------------------------------------SideBar1 Class----------------------------
+import java.awt.*;
+import javax.swing.*;
+public class SideBar1 extends JPanel
+{
+    private JButton weather;
+    private JButton advert;
+    private JButton something1;
+    private JButton something2;
+    
+    private String in;
+    public SideBar1 ()
+    {
+        super ();
+         setBackground(Color.yellow);
+        setLayout(new GridLayout(5,2,1,1));
+        CreateButtons();
+       
+        
+    }
+     
+    
+    public SideBar1(String info){
+        in = info;
+        
+    }
+
+    SideBar1(NewsDeck deck) {
+    }
+    
+    public void CreateButtons(){
+        weather = new JButton("Weather update, coming soon...");
+        add(weather);
+        advert = new JButton("Some advert here  <<<>>>>");
+        add(advert);
+        something1 = new JButton("Something 1");
+        add(something1);
+        something2 = new JButton("Something 2");
+        add(something2);
+    }
+}
+
+ 
