@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.awt.event.*;
 
 public class NewsOutlets extends JPanel {
 
@@ -15,14 +16,13 @@ public class NewsOutlets extends JPanel {
     private JButton cnn;
     private JButton cbs;
     private JButton bbc;
-    private JButton fox;
+    private JButton fox; 
     
-    String bbcURL = "https://newsapi.org/v2/top-headlines?" +
-          "sources=bbc-news&" +
-          "apiKey=cac0bdfd2db24f4abb4cade9f209f999";
+    //API from NewsAPI.org, however it doesn't work with java
+    //String bbcURL = "https://newsapi.org/v2/top-headlines?" +
+      //    "sources=bbc-news&" +
+        //  "apiKey=cac0bdfd2db24f4abb4cade9f209f999";
     
-    WebClient jsonBBC = new WebClient().DownloadString(bbcURL);
-
     public NewsOutlets() {
         super();
         setBackground(Color.yellow);
@@ -51,9 +51,36 @@ public class NewsOutlets extends JPanel {
         fox = new JButton("FOX NEWS");
         fox.setFont(new Font("Serif", Font.BOLD, 38));
         add(fox);
+        
+        cnn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("CNN Clicked!");
+            }
+        });
+        
+        cbs.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("CBS Clicked!");
+            }
+        });
+        bbc.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("BBC Clicked!");
+            }
+        });
+        
+        fox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("FOX Clicked!");
+            }
+        });
     }
     
-        public String getWeather(String source){
+    public String getNews(String source){
         
         String response = "";
         try {
