@@ -11,18 +11,13 @@ public class SideBar1 extends JPanel
     private JButton advert;
     private JButton something1;
     private JButton something2;
-    
-    private String in;
+        
     public SideBar1 ()
     {
         super ();
         setBackground(Color.white);
         setLayout(new GridLayout(5,1));
         CreateButtons();
-    }
-
-    public SideBar1(String info){
-        in = info;
     }
 
     SideBar1(NewsDeck deck) {
@@ -59,6 +54,7 @@ public class SideBar1 extends JPanel
         
         String response = "";
         try {
+            //Obtaining weather data for the nearest major location, Philadelphia
             URL url = new URL("https://www.metaweather.com/api/location/2471217/");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -70,7 +66,6 @@ public class SideBar1 extends JPanel
         catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
-        System.out.println(response);
         return response;
     }
     

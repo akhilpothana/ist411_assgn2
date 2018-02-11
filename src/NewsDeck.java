@@ -1,5 +1,7 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,49 +16,57 @@ import org.json.simple.parser.JSONParser;
 
 public class NewsDeck extends JPanel {
 
-    private String in;
-    private JLabel news;
+    private JButton articleButtons[] = new JButton[7];
+    
+    private final String API_Key = "74e0caef3f69426e9228da0337cfbb18";
+    private Desktop desktop = Desktop.getDesktop();
 
     public NewsDeck() {
         super();
         setBackground(Color.white);
-        setLayout(new GridLayout());
-        getNews();
-
-    }
-
-    public NewsDeck(String info) {
-        in = info;
-
-    }
-
-    NewsDeck(InfPanel inf) {
+        setLayout(new GridLayout(7,1));        
+        
+        for(int i=0; i<= 6; i++)
+        {
+            articleButtons[i] = new JButton("");
+            add(articleButtons[i]);
+        }
+        getNews();  
     }
 
     private void getNews() {
-        news = new JLabel("");
-        news.setFont(new Font("Serif", Font.BOLD, 20));
-        add(news, "Center");
-        
+      
         JSONParser parser = new JSONParser();
-        try {
-            JSONObject json = (JSONObject) parser.parse(getNewsData());
-            JSONArray articles = (JSONArray) json.get("articles");
-            JSONObject article = (JSONObject) articles.get(0);
-            
-            news.setText((String)article.get("title"));
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        for(int i=0; i<= 6; i++)
+        {
+            try {  
+                JSONObject json = (JSONObject) parser.parse(getNewsData());
+                JSONArray articles = (JSONArray) json.get("articles");
+                JSONObject article = (JSONObject) articles.get(i);
 
+                articleButtons[i].setText((String)article.get("title"));
+                articleButtons[i].addActionListener((ActionEvent e) -> {
+                    
+                   try {
+                        desktop.browse(new URL((String)article.get("url")).toURI());
+                    }
+                    catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } 
+        
     }
     
     public String getNewsData(){
         
         String response = "";
         try {
-            URL url = new URL("https://newsapi.org/v2/top-headlines?country=us&apiKey=74e0caef3f69426e9228da0337cfbb18");
+            URL url = new URL("https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_Key);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
