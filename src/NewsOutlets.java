@@ -12,17 +12,22 @@ import java.awt.event.*;
 
 public class NewsOutlets extends JPanel {
 
-    private String in;
     private JButton cnn;
     private JButton cbs;
     private JButton bbc;
     private JButton fox;
     
-    public NewsOutlets() {
+    private final String API_Key = "74e0caef3f69426e9228da0337cfbb18";
+    
+    private NewsDeck nd;
+    
+    public NewsOutlets(NewsDeck nd) {
         super();
         setBackground(Color.yellow);
         setLayout(new GridLayout());
         CreateButtons();
+        
+        this.nd = nd;
     }
 
     public void CreateButtons() {
@@ -42,27 +47,27 @@ public class NewsOutlets extends JPanel {
         cnn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println("CNN Clicked!");
+                nd.getNews("1", "https://newsapi.org/v2/top-headlines?sources=cnn&apiKey=" + API_Key);    
             }
         });
         
         cbs.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println("CBS Clicked!");
+                nd.getNews("1", "https://newsapi.org/v2/top-headlines?sources=cbs-news&apiKey=" + API_Key);
             }
         });
         bbc.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println("BBC Clicked!");
+                nd.getNews("1", "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=" + API_Key);
             }
         });
         
         fox.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println("FOX Clicked!");
+                nd.getNews("1", "https://newsapi.org/v2/top-headlines?sources=fox-news&apiKey=" + API_Key);
             }
         });
     }

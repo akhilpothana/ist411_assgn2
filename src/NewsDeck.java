@@ -41,10 +41,11 @@ public class NewsDeck extends JPanel {
             articleButtons[i] = new JButton("");
             add(articleButtons[i]);
         }
-        getNews();  
+        getNews("", "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_Key);  
         getWeather();
     }
     
+    //Initiate retrieval and display of weather
     public void getWeather(){
         JSONParser parser = new JSONParser();
         try {
@@ -59,21 +60,31 @@ public class NewsDeck extends JPanel {
         }
     }
 
-    private void getNews() {
+    //Initiate retrieval and display of news
+    public void getNews(String news, String urlString) {
       
         JSONParser parser = new JSONParser();
         for(int i=0; i<= 6; i++)
         {
             try {  
-                JSONObject json = (JSONObject) parser.parse(getNewsData());
+                JSONObject json = (JSONObject) parser.parse(getNewsData(urlString));
                 JSONArray articles = (JSONArray) json.get("articles");
                 JSONObject article = (JSONObject) articles.get(i);
 
-                articleButtons[i].setText((String)article.get("title"));
-                articleButtons[i].addActionListener((ActionEvent e) -> {
+                getArticleButtons()[i].setText((String)article.get("title"));
+                
+                //Removeve earlier actionlistener, so new ones can be set for the new articles
+                if(!news.equals(""))
+                {
+                    for(ActionListener al : getArticleButtons()[i].getActionListeners() ) {
+                        getArticleButtons()[i].removeActionListener(al);
+                    }
+                }
+
+                getArticleButtons()[i].addActionListener((ActionEvent e) -> {
                     
-                   try {
-                        desktop.browse(new URL((String)article.get("url")).toURI());
+                    try {
+                       desktop.browse(new URL((String)article.get("url")).toURI());
                     }
                     catch(Exception ex) {
                         ex.printStackTrace();
@@ -87,11 +98,11 @@ public class NewsDeck extends JPanel {
         
     }
     
-    public String getNewsData(){
+    public String getNewsData(String urlString){
         
         String response = "";
         try {
-            URL url = new URL("https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_Key);
+            URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -105,6 +116,10 @@ public class NewsDeck extends JPanel {
         return response;
     }
     
+    /**
+     * This method takes in input stream and correct formats it so be parsed as JSON
+     * @return - a JSON formatted String
+     */
     private String convertJSONtoString(InputStream is)
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -147,5 +162,19 @@ public class NewsDeck extends JPanel {
             System.out.println("Exception: " + e.getMessage());
         }
         return response;
+    }
+
+    /**
+     * @return the articleButtons
+     */
+    public JButton[] getArticleButtons() {
+        return articleButtons;
+    }
+
+    /**
+     * @param articleButtons the articleButtons to set
+     */
+    public void setArticleButtons(JButton[] articleButtons) {
+        this.articleButtons = articleButtons;
     }
 }

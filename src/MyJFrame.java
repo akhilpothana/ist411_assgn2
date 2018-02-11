@@ -16,7 +16,7 @@ public class MyJFrame extends JFrame {
 
         NewsDeck nd = new NewsDeck();
 
-        NewsOutlets no = new NewsOutlets();
+        NewsOutlets no = new NewsOutlets(nd);
         
         add(nd, "Center");
         add(no, "South");
