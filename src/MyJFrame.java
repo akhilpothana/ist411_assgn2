@@ -1,7 +1,6 @@
 
 import java.awt.*;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class MyJFrame extends JFrame {
 
@@ -15,9 +14,7 @@ public class MyJFrame extends JFrame {
         setBackground(Color.GRAY);
 
         NewsDeck nd = new NewsDeck();
-
-        NewsOutlets no = new NewsOutlets(nd);
-        
+        NewsOutlets no = new NewsOutlets(nd); 
         add(nd, "Center");
         add(no, "South");
 

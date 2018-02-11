@@ -19,13 +19,15 @@ public class NewsDeck extends JPanel {
     private JButton weatherButton = new JButton("");
     private JButton articleButtons[] = new JButton[7];
     
+    //API key needed when making data requests
     private final String API_Key = "74e0caef3f69426e9228da0337cfbb18";
     private Desktop desktop = Desktop.getDesktop();    
 
     public NewsDeck() {
         super();
-        setBackground(Color.white);
-        setLayout(new GridLayout(8,0));        
+        setLayout(new GridLayout(8,0));    
+        
+        //Creating and setting up the weather data 
         weatherButton.addActionListener((ActionEvent e) -> {
                     
                    try {
@@ -36,11 +38,14 @@ public class NewsDeck extends JPanel {
                     }
                 });
         add(weatherButton);
+        
+        //Creating and setting up the article buttons
         for(int i=0; i<= 6; i++)
         {
             articleButtons[i] = new JButton("");
             add(articleButtons[i]);
         }
+        //First request for news data: Top headlines
         getNews("", "https://newsapi.org/v2/top-headlines?country=us&apiKey=" + API_Key);  
         getWeather();
     }
@@ -59,8 +64,12 @@ public class NewsDeck extends JPanel {
             ex.printStackTrace();
         }
     }
-
-    //Initiate retrieval and display of news
+    
+    /**
+     * 
+     * @param news - a parameter to check whether the request was for the headlines, or for a specific news source
+     * @param urlString - the url that contains the JSON data for the wanted news
+     */
     public void getNews(String news, String urlString) {
       
         JSONParser parser = new JSONParser();
@@ -98,6 +107,7 @@ public class NewsDeck extends JPanel {
         
     }
     
+    //Makes an https GET request to obtain the JSON data
     public String getNewsData(String urlString){
         
         String response = "";
