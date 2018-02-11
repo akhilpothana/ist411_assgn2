@@ -16,26 +16,13 @@ public class NewsOutlets extends JPanel {
     private JButton cnn;
     private JButton cbs;
     private JButton bbc;
-    private JButton fox; 
-    
-    //API from NewsAPI.org, however it doesn't work with java
-    //String bbcURL = "https://newsapi.org/v2/top-headlines?" +
-      //    "sources=bbc-news&" +
-        //  "apiKey=cac0bdfd2db24f4abb4cade9f209f999";
+    private JButton fox;
     
     public NewsOutlets() {
         super();
         setBackground(Color.yellow);
         setLayout(new GridLayout());
         CreateButtons();
-    }
-
-    public NewsOutlets(String info) {
-        in = info;
-
-    }
-
-    public NewsOutlets(NewsDeck deck) {
     }
 
     public void CreateButtons() {

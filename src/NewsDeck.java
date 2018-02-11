@@ -16,22 +16,47 @@ import org.json.simple.parser.JSONParser;
 
 public class NewsDeck extends JPanel {
 
+    private JButton weatherButton = new JButton("");
     private JButton articleButtons[] = new JButton[7];
     
     private final String API_Key = "74e0caef3f69426e9228da0337cfbb18";
-    private Desktop desktop = Desktop.getDesktop();
+    private Desktop desktop = Desktop.getDesktop();    
 
     public NewsDeck() {
         super();
         setBackground(Color.white);
-        setLayout(new GridLayout(7,1));        
-        
+        setLayout(new GridLayout(8,0));        
+        weatherButton.addActionListener((ActionEvent e) -> {
+                    
+                   try {
+                        desktop.browse(new URL("https://weather.com/weather/today/l/USPA1276:1:US").toURI());
+                    }
+                    catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+        add(weatherButton);
         for(int i=0; i<= 6; i++)
         {
             articleButtons[i] = new JButton("");
             add(articleButtons[i]);
         }
         getNews();  
+        getWeather();
+    }
+    
+    public void getWeather(){
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject json = (JSONObject) parser.parse(getWeatherData());
+            JSONArray days = (JSONArray) json.get("consolidated_weather");
+            JSONObject day = (JSONObject) days.get(0);
+            
+            weatherButton.setText("<html>Weather for Philadelphia<br> " + day.get("weather_state_name") + "<br>" + day.get("the_temp") + " C" + "</html>");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void getNews() {
@@ -100,5 +125,27 @@ public class NewsDeck extends JPanel {
             }
         }      
         return sb.toString();
+    }
+    
+    /**
+     * Method to retrieve weather data and display it
+     */
+    public String getWeatherData(){
+        
+        String response = "";
+        try {
+            //Obtaining weather data for the nearest major location, Philadelphia
+            URL url = new URL("https://www.metaweather.com/api/location/2471217/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            // read the response and obtain string value of JSON data
+            InputStream in = new BufferedInputStream(connection.getInputStream());
+            response = convertJSONtoString(in);
+        }
+        catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+        return response;
     }
 }

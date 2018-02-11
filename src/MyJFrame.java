@@ -11,10 +11,15 @@ public class MyJFrame extends JFrame {
     public MyJFrame() {
         super("The News Hub");
 
-        MyJPanel mjp = new MyJPanel();
-        mjp.setBackground(Color.GRAY);
+        setLayout(new BorderLayout());
+        setBackground(Color.GRAY);
 
-        add(mjp, "Center");
+        NewsDeck nd = new NewsDeck();
+
+        NewsOutlets no = new NewsOutlets();
+        
+        add(nd, "Center");
+        add(no, "South");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
